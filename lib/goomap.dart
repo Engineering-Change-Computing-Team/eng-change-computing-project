@@ -1,5 +1,7 @@
 import 'dart:collection';
-
+import 'segment.dart';
+import 'package:collection/collection.dart';
+import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:first_map_plotter/results.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -51,12 +53,27 @@ class _GooMapState extends State<GooMap> {
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
-      visible: polygonLatLngs.length >= 4,
+      visible: polygonLatLngs.length >= 4 && isPolygonSimple(polygonLatLngs),
     );
   }
 
-  // Draw Polygon to the map
-  void _setPolygon() {
+  // Check if Polygon is simple
+  // TODO: Complete isPolygonSimple function following steps below.
+  bool isPolygonSimple(List<LatLng> poly) {
+    // 1) Create a list of all of the line segments in the polygon.
+    // Every consecutive pair from the list forms a line segment.
+    // Create these line segments using the segments class constructor
+    // i.e. Segment(startPoint, endPoint).
+    // 2) Check for each line segment whether it intersects with any of the other
+    // line segments from the
+    // Use the intersectsWith method from the Segment class.
+    // 3) If any of the line segements do intersect with a 3rd line return false,
+    // otherwise return true.
+    return true;
+  }
+
+  // Draw this type of Polygon to the map if it has less than 3 points.
+  void _setBasicPolygon() {
     final String polygonIdVal = 'polygon_id_$_polygonIdCounter';
     _polygons.add(Polygon(
         polygonId: PolygonId(polygonIdVal),
@@ -64,6 +81,28 @@ class _GooMapState extends State<GooMap> {
         strokeWidth: 2,
         strokeColor: Colors.yellow,
         fillColor: Colors.yellow.withOpacity(0.15)));
+  }
+
+  // Draw this type of Polygon to the map if it has more than 3 points and is simple.
+  void _setSimplePolygon() {
+    final String polygonIdVal = 'polygon_id_$_polygonIdCounter';
+    _polygons.add(Polygon(
+        polygonId: PolygonId(polygonIdVal),
+        points: polygonLatLngs,
+        strokeWidth: 2,
+        strokeColor: Colors.green,
+        fillColor: Colors.green.withOpacity(0.5)));
+  }
+
+  // Draw this type of Polygon to the map if it is self-intersecting and has more than 3 points.
+  void _setInvalidPolygon() {
+    final String polygonIdVal = 'polygon_id_$_polygonIdCounter';
+    _polygons.add(Polygon(
+        polygonId: PolygonId(polygonIdVal),
+        points: polygonLatLngs,
+        strokeWidth: 2,
+        strokeColor: Colors.red,
+        fillColor: Colors.red.withOpacity(0.15)));
   }
 
   // Removes the last point set at the Polygon
@@ -106,7 +145,17 @@ class _GooMapState extends State<GooMap> {
             if (_isPolygon) {
               setState(() {
                 polygonLatLngs.add(point);
-                _setPolygon();
+                if (polygonLatLngs.length == 4) {
+                  _polygonIdCounter++;
+                }
+                print(polygonLatLngs);
+                if (polygonLatLngs.length < 4) {
+                  _setBasicPolygon();
+                } else if (isPolygonSimple(polygonLatLngs)) {
+                  _setSimplePolygon();
+                } else {
+                  _setInvalidPolygon();
+                }
               });
             }
           },
