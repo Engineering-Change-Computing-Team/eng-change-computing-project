@@ -60,6 +60,20 @@ class _GooMapState extends State<GooMap> {
   // Check if Polygon is simple
   // TODO: Complete isPolygonSimple function following steps below.
   bool isPolygonSimple(List<LatLng> poly) {
+    List<Segment> lines;
+    for (var i = 0; i < poly.length; i += 2) {
+      var line = new Segment(poly[i], poly[i + 1]);
+      lines.add(line);
+      if (lines.length != 0) {
+        for (var j = 0; j < lines.length; j++) {
+          if (line.intersectsWith(lines[j])) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+
     // 1) Create a list of all of the line segments in the polygon.
     // Every consecutive pair from the list forms a line segment.
     // Create these line segments using the segments class constructor
@@ -69,7 +83,6 @@ class _GooMapState extends State<GooMap> {
     // Use the intersectsWith method from the Segment class.
     // 3) If any of the line segements do intersect with a 3rd line return false,
     // otherwise return true.
-    return true;
   }
 
   // Draw this type of Polygon to the map if it has less than 3 points.
