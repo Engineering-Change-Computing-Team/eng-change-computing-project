@@ -123,7 +123,7 @@ class _GooMapState extends State<GooMap> {
 
     LatLng lastPoint = poly[polygonLatLngs.length - 1];
     poly.remove(lastPoint);
-    poly.insert(changeCoordPos, lastPoint);
+    poly.insert(changeCoordPos + 1, lastPoint);
     //for (int i = changeCoordPos; i < polygonLatLngs.length - 1; i++) {}
   }
 
