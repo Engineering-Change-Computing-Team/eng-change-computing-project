@@ -37,6 +37,23 @@ class _GooMapState extends State<GooMap> {
     _locationData = widget.location;
   }
 
+  int getIntersectionIndex(List<LatLng> poly) {
+    Segment lastLine = Segment(poly.last, poly[0]);
+    Segment penultimateLine = Segment(poly[poly.length - 2], poly.last);
+
+    for (var i = 0; i < poly.length; i++) {
+      Segment test = Segment(poly[i], poly[i + 1]);
+      if (test.intersectsWith(lastLine) ||
+          test.intersectsWith(penultimateLine)) {
+        print("--------------------------");
+        print("***********INTERSECTION INDEX IS: $i");
+        print("--------------------------");
+        return i;
+      }
+    }
+    return -1;
+  }
+
   // The results button that will appear if an appropiate Polygon is selected
   // Right now, the Polygon is 'appropriate' if it has 4 or more points.
   // TODO: (Backend) make 'appropriate' - 4 or more points and an enclosed area.
@@ -69,12 +86,18 @@ class _GooMapState extends State<GooMap> {
 
     // Initialise the lines list
     List<Segment> lines = [];
-    lines.add(Segment(poly[poly.length - 1], poly[0]));
+    Segment penulLine = Segment(poly[poly.length - 2], poly[poly.length - 1]);
+    Segment lastLine = Segment(poly[poly.length - 1], poly[0]);
     for (int i = 0; i < poly.length - 1; i++) {
       Segment line = Segment(poly[i], poly[i + 1]);
       if (lines.length > 1) {
         for (int j = 0; j < lines.length; j++) {
-          if (line.intersectsWith(lines[j])) return Tuple2(false, j);
+          // ...int index = getIntersectionIndex(poly);
+          if (line.intersectsWith(penulLine)) {
+            return Tuple2(false, getIntersectionIndex(poly));
+          } else if (line.intersectsWith(lastLine)) {
+            return Tuple2(false, getIntersectionIndex(poly));
+          }
         }
       }
       lines.add(line);
@@ -99,6 +122,7 @@ class _GooMapState extends State<GooMap> {
     // Are shifted by one to the right.
 
     LatLng lastPoint = poly[polygonLatLngs.length - 1];
+    poly.remove(lastPoint);
     poly.insert(changeCoordPos, lastPoint);
     //for (int i = changeCoordPos; i < polygonLatLngs.length - 1; i++) {}
   }
@@ -189,7 +213,7 @@ class _GooMapState extends State<GooMap> {
                 // intersects with the last line segment.
                 int changeCoordPos;
                 if (isSimpleTuple.item2 != -1) {
-                  int changeCoordPos = isSimpleTuple.item2;
+                  changeCoordPos = isSimpleTuple.item2;
                 }
 
                 // If the Polygon is not simple we can redraw the Polygon
@@ -197,8 +221,9 @@ class _GooMapState extends State<GooMap> {
                 if (isSimple) {
                   _setSimplePolygon();
                 } else {
-                  // redrawPolygon(polygonLatLngs, changeCoordPos);
+                  redrawPolygon(polygonLatLngs, changeCoordPos);
                   print("*******POLYGON IS NOT SIMPLE");
+                  print("*******REORDERED LIST: $polygonLatLngs");
                   _setSimplePolygon();
                 }
                 /*print("---------------------------------------");
