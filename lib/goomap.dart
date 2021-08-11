@@ -1,8 +1,6 @@
 import 'dart:collection';
 import 'package:tuple/tuple.dart';
 import 'segment.dart';
-import 'package:collection/collection.dart';
-import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 import 'package:first_map_plotter/results.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -46,6 +44,10 @@ class _GooMapState extends State<GooMap> {
       if (test.intersectsWith(lastLine) ||
           test.intersectsWith(penultimateLine)) {
         print("--------------------------");
+        bool penulLine = test.intersectsWith(penultimateLine);
+        bool lasLine = test.intersectsWith(lastLine);
+        print("***********INTERSECTS WITH LAST LINE: $lasLine");
+        print("***********INTERSECTS WITH PENULTIMATE LINE: $penulLine");
         print("***********INTERSECTION INDEX IS: $i");
         print("--------------------------");
         return i;
@@ -79,41 +81,25 @@ class _GooMapState extends State<GooMap> {
   // TODO: Complete isPolygonSimple function following steps below.
   Tuple2 isPolygonSimple(List<LatLng> poly) {
     // -1 means that the 2nd element of the tuple is invalid
-    if (poly.length < 4) {
-      Tuple2 hi = Tuple2<bool, int>(true, -1);
-      return hi;
-    }
+
+    // if (poly.length < 4) {
+    //   Tuple2 hi = Tuple2<bool, int>(true, -1);
+    //   return hi;
+    // }
 
     // Initialise the lines list
-    List<Segment> lines = [];
     Segment penulLine = Segment(poly[poly.length - 2], poly[poly.length - 1]);
     Segment lastLine = Segment(poly[poly.length - 1], poly[0]);
-    for (int i = 0; i < poly.length - 1; i++) {
+    for (int i = 0; i < poly.length - 2; i++) {
       Segment line = Segment(poly[i], poly[i + 1]);
-      if (lines.length > 1) {
-        for (int j = 0; j < lines.length; j++) {
-          // ...int index = getIntersectionIndex(poly);
-          if (line.intersectsWith(penulLine)) {
-            return Tuple2(false, getIntersectionIndex(poly));
-          } else if (line.intersectsWith(lastLine)) {
-            return Tuple2(false, getIntersectionIndex(poly));
-          }
-        }
+      if (line.intersectsWith(penulLine)) {
+        return Tuple2(false, getIntersectionIndex(poly));
+      } else if (line.intersectsWith(lastLine)) {
+        return Tuple2(false, getIntersectionIndex(poly));
       }
-      lines.add(line);
     }
 
     return Tuple2(true, -1);
-
-    // 1) Create a list of all of the line segments in the polygon.
-    // Every consecutive pair from the list forms a line segment.
-    // Create these line segments using the segments class constructor
-    // i.e. Segment(startPoint, endPoint).
-    // 2) Check for each line segment whether it intersects with any of the other
-    // line segments from the
-    // Use the intersectsWith method from the Segment class.
-    // 3) If any of the line segements do intersect with a line return false,
-    // otherwise return true.
   }
 
   void redrawPolygon(List<LatLng> poly, int changeCoordPos) {
@@ -124,6 +110,7 @@ class _GooMapState extends State<GooMap> {
     LatLng lastPoint = poly[polygonLatLngs.length - 1];
     poly.remove(lastPoint);
     poly.insert(changeCoordPos + 1, lastPoint);
+    print("*******REORDERED LIST: $poly");
     //for (int i = changeCoordPos; i < polygonLatLngs.length - 1; i++) {}
   }
 
@@ -164,6 +151,7 @@ class _GooMapState extends State<GooMap> {
   Widget _removePolygonPoint() {
     return FloatingActionButton.extended(
       onPressed: () {
+        // TODO: change to most recently placed point
         setState(() {
           polygonLatLngs.removeLast();
         });
@@ -223,7 +211,7 @@ class _GooMapState extends State<GooMap> {
                 } else {
                   redrawPolygon(polygonLatLngs, changeCoordPos);
                   print("*******POLYGON IS NOT SIMPLE");
-                  print("*******REORDERED LIST: $polygonLatLngs");
+
                   _setSimplePolygon();
                 }
                 /*print("---------------------------------------");

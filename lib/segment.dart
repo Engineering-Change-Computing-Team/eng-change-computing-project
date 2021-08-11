@@ -33,9 +33,9 @@ class Segment {
     return "Segment($start, $end)";
   }
 
-  bool CCW(LatLng p1, LatLng p2, LatLng p3) {
-    return (p3.latitude - p1.latitude) * (p2.longitude - p1.longitude) >
-        (p2.latitude - p1.latitude) * (p3.longitude - p1.longitude);
+  /*bool CCW(LatLng p1, LatLng p2, LatLng p3) {
+    return (p3.longitude - p1.longitude) * (p2.latitude - p1.latitude) >
+        (p2.longitude - p1.longitude) * (p3.latitude - p1.latitude);
   }
 
   bool intersectsWith(Segment other) {
@@ -46,5 +46,31 @@ class Segment {
 
     return (CCW(p1, p3, p4) != CCW(p2, p3, p4)) &&
         (CCW(p1, p2, p3) != CCW(p1, p2, p4));
+  }*/
+
+  // returns true if the line from (a,b)->(c,d) intersects with (p,q)->(r,s)
+  bool intersectsWith(Segment other) {
+    // (a, b) is _start
+    // (c, d) is _end
+    // (p, q) is other._start
+    // (r, s) is other._end
+    var a = _start.longitude;
+    var b = _start.latitude;
+    var c = _end.longitude;
+    var d = _end.latitude;
+    var p = other._start.longitude;
+    var q = other._start.latitude;
+    var r = other._end.longitude;
+    var s = other._end.latitude;
+
+    var det, gamma, lambda;
+    det = (c - a) * (s - q) - (r - p) * (d - b);
+    if (det == 0) {
+      return false;
+    } else {
+      lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
+      gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
+      return (0 < lambda && lambda < 1) && (0 < gamma && gamma < 1);
+    }
   }
 }
