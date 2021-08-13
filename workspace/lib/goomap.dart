@@ -1,5 +1,6 @@
 import 'dart:collection';
-
+import 'package:tuple/tuple.dart';
+import 'segment.dart';
 import 'package:first_map_plotter/results.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -34,6 +35,27 @@ class _GooMapState extends State<GooMap> {
     _locationData = widget.location;
   }
 
+  int getIntersectionIndex(List<LatLng> poly) {
+    Segment lastLine = Segment(poly.last, poly[0]);
+    Segment penultimateLine = Segment(poly[poly.length - 2], poly.last);
+
+    for (var i = 0; i < poly.length; i++) {
+      Segment test = Segment(poly[i], poly[i + 1]);
+      if (test.intersectsWith(lastLine) ||
+          test.intersectsWith(penultimateLine)) {
+        print("--------------------------");
+        bool penulLine = test.intersectsWith(penultimateLine);
+        bool lasLine = test.intersectsWith(lastLine);
+        print("***********INTERSECTS WITH LAST LINE: $lasLine");
+        print("***********INTERSECTS WITH PENULTIMATE LINE: $penulLine");
+        print("***********INTERSECTION INDEX IS: $i");
+        print("--------------------------");
+        return i;
+      }
+    }
+    return -1;
+  }
+
   // The results button that will appear if an appropiate Polygon is selected
   // Right now, the Polygon is 'appropriate' if it has 4 or more points.
   // TODO: (Backend) make 'appropriate' - 4 or more points and an enclosed area.
@@ -55,8 +77,45 @@ class _GooMapState extends State<GooMap> {
     );
   }
 
-  // Draw Polygon to the map
-  void _setPolygon() {
+  // Check if Polygon is simple
+  // TODO: Complete isPolygonSimple function following steps below.
+  Tuple2 isPolygonSimple(List<LatLng> poly) {
+    // -1 means that the 2nd element of the tuple is invalid
+
+    // if (poly.length < 4) {
+    //   Tuple2 hi = Tuple2<bool, int>(true, -1);
+    //   return hi;
+    // }
+
+    // Initialise the lines list
+    Segment penulLine = Segment(poly[poly.length - 2], poly[poly.length - 1]);
+    Segment lastLine = Segment(poly[poly.length - 1], poly[0]);
+    for (int i = 0; i < poly.length - 2; i++) {
+      Segment line = Segment(poly[i], poly[i + 1]);
+      if (line.intersectsWith(penulLine)) {
+        return Tuple2(false, getIntersectionIndex(poly));
+      } else if (line.intersectsWith(lastLine)) {
+        return Tuple2(false, getIntersectionIndex(poly));
+      }
+    }
+
+    return Tuple2(true, -1);
+  }
+
+  void redrawPolygon(List<LatLng> poly, int changeCoordPos) {
+    // The most recent and penultimate point form a segment that intersects
+    // The last point becomes the (changeCoordPos)th point and points after the (change) point
+    // Are shifted by one to the right.
+
+    LatLng lastPoint = poly[polygonLatLngs.length - 1];
+    poly.remove(lastPoint);
+    poly.insert(changeCoordPos + 1, lastPoint);
+    print("*******REORDERED LIST: $poly");
+    //for (int i = changeCoordPos; i < polygonLatLngs.length - 1; i++) {}
+  }
+
+  // Draw this type of Polygon to the map if it has less than 3 points.
+  void _setBasicPolygon() {
     final String polygonIdVal = 'polygon_id_$_polygonIdCounter';
     _polygons.add(Polygon(
         polygonId: PolygonId(polygonIdVal),
@@ -66,10 +125,33 @@ class _GooMapState extends State<GooMap> {
         fillColor: Colors.yellow.withOpacity(0.15)));
   }
 
+  // Draw this type of Polygon to the map if it has more than 3 points and is simple.
+  void _setSimplePolygon() {
+    final String polygonIdVal = 'polygon_id_$_polygonIdCounter';
+    _polygons.add(Polygon(
+        polygonId: PolygonId(polygonIdVal),
+        points: polygonLatLngs,
+        strokeWidth: 2,
+        strokeColor: Colors.green,
+        fillColor: Colors.green.withOpacity(0.5)));
+  }
+
+  // Draw this type of Polygon to the map if it is self-intersecting and has more than 3 points.
+  void _setInvalidPolygon() {
+    final String polygonIdVal = 'polygon_id_$_polygonIdCounter';
+    _polygons.add(Polygon(
+        polygonId: PolygonId(polygonIdVal),
+        points: polygonLatLngs,
+        strokeWidth: 2,
+        strokeColor: Colors.red,
+        fillColor: Colors.red.withOpacity(0.15)));
+  }
+
   // Removes the last point set at the Polygon
   Widget _removePolygonPoint() {
     return FloatingActionButton.extended(
       onPressed: () {
+        // TODO: change to most recently placed point
         setState(() {
           polygonLatLngs.removeLast();
         });
@@ -106,7 +188,43 @@ class _GooMapState extends State<GooMap> {
             if (_isPolygon) {
               setState(() {
                 polygonLatLngs.add(point);
-                _setPolygon();
+
+                Tuple2 isSimpleTuple = isPolygonSimple(polygonLatLngs);
+
+                bool isSimple = isSimpleTuple.item1;
+                int pos = isSimpleTuple.item2;
+                print("************LIST: $polygonLatLngs");
+                print("************TUPLE_ITEM1: $isSimple");
+                print("************TUPLE_ITEM2: $pos");
+
+                // This is the position of the start of the line segment which
+                // intersects with the last line segment.
+                int changeCoordPos;
+                if (isSimpleTuple.item2 != -1) {
+                  changeCoordPos = isSimpleTuple.item2;
+                }
+
+                // If the Polygon is not simple we can redraw the Polygon
+                // to create an enclosed shape and use it instead.
+                if (isSimple) {
+                  _setSimplePolygon();
+                } else {
+                  redrawPolygon(polygonLatLngs, changeCoordPos);
+                  print("*******POLYGON IS NOT SIMPLE");
+
+                  _setSimplePolygon();
+                }
+                /*print("---------------------------------------");
+                print("The polygon has no self-intersecting lines: $isSimple");
+                print(polygonLatLngs);
+                print("---------------------------------------");
+                if (polygonLatLngs.length < 4) {
+                  _setBasicPolygon();
+                } else if (isPolygonSimple(polygonLatLngs).item1) {
+                  _setSimplePolygon();
+                } else {
+                  _setInvalidPolygon();
+                }*/
               });
             }
           },
