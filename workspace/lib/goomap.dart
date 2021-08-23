@@ -5,6 +5,7 @@ import 'package:first_map_plotter/results.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 //Expect this to receive the location data from the main page
 class GooMap extends StatefulWidget {
@@ -34,6 +35,8 @@ class _GooMapState extends State<GooMap> {
     super.initState();
     _locationData = widget.location;
   }
+
+
 
   int getIntersectionIndex(List<LatLng> poly) {
     Segment lastLine = Segment(poly.last, poly[0]);
@@ -147,6 +150,54 @@ class _GooMapState extends State<GooMap> {
         fillColor: Colors.red.withOpacity(0.15)));
   }
 
+Widget buildFloatingSearchBar() {
+        final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+        return FloatingSearchBar(
+          hint: 'Search...',
+          scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+          transitionDuration: const Duration(milliseconds: 800),
+          transitionCurve: Curves.easeInOut,
+          physics: const BouncingScrollPhysics(),
+          axisAlignment: isPortrait ? 0.0 : -1.0,
+          openAxisAlignment: 0.0,
+          width: isPortrait ? 600 : 500,
+          debounceDelay: const Duration(milliseconds: 500),
+          onQueryChanged: (query) {
+            // Call your model, bloc, controller here.
+          },
+          // Specify a custom transition to be used for
+          // animating between opened and closed stated.
+          transition: CircularFloatingSearchBarTransition(),
+          actions: [
+            FloatingSearchBarAction(
+              showIfOpened: false,
+              child: CircularButton(
+                icon: const Icon(Icons.place),
+                onPressed: () {},
+              ),
+            ),
+            FloatingSearchBarAction.searchToClear(
+              showIfClosed: false,
+            ),
+          ],
+          builder: (context, transition) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Material(
+                color: Colors.white,
+                elevation: 4.0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: Colors.accents.map((color) {
+                    return Container(height: 112, color: Colors.white);
+                  }).toList(),
+                ),
+              ),
+            );
+          },
+        );
+      }
+
   // Removes the last point set at the Polygon
   Widget _removePolygonPoint() {
     return FloatingActionButton.extended(
@@ -165,16 +216,6 @@ class _GooMapState extends State<GooMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // TODO: Improve design of appbar.
-      appBar: AppBar(
-        title: Text('Where is your farmland?'),
-        centerTitle: true,
-        backgroundColor: Colors.amber,
-      ),
-      //The button to remove a polygon point appears once you begin creating a polygon
-      floatingActionButton: polygonLatLngs.length > 0 && _isPolygon
-          ? _removePolygonPoint()
-          : null,
       body: Stack(children: [
         GoogleMap(
           initialCameraPosition: CameraPosition(
@@ -185,6 +226,7 @@ class _GooMapState extends State<GooMap> {
           polygons: _polygons,
           myLocationEnabled: true,
           onTap: (point) {
+            print("-----------------------$_isPolygon");
             if (_isPolygon) {
               setState(() {
                 polygonLatLngs.add(point);
@@ -230,26 +272,91 @@ class _GooMapState extends State<GooMap> {
           },
         ),
         // LAYER OF BUTTONS
-        Align(
-          // TODO: Align the two buttons in the bottom left.
-          // TODO: Complete design of 'Map Polygon' button
-          alignment: Alignment.bottomLeft,
-          child: Column(
-            children: [
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.lightBlue),
-                  onPressed: () {
-                    _isPolygon = true;
-                  },
-                  child: Text(
-                    'Map Polygon',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  )),
-              resultsButton(),
-            ],
+        //Button 1 (get Location)
+        /*  Positioned(
+            right: 15,
+            top: 100,
+            child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 30,
+                    child: IconButton(
+                      color: Color(0xff91C07C),
+                      icon: Icon(Icons.gps_not_fixed),
+                      iconSize: 38.0,
+                      // alignment: Alignment.centerRight,
+
+                      onPressed: _currentLocation,
+                    )),
+          ), */
+          //Button 2 (Pencil)
+          Positioned(
+            right: 15,
+            top: 170,
+            child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 30,
+                    child: IconButton(
+                      color: Color(0xff91C07C),
+                      icon: Icon(Icons.create_outlined),
+                      iconSize: 38.0,
+                      // alignment: Alignment.centerRight,
+
+                      onPressed: () {
+                        _isPolygon = true;
+                      },
+                    )),
           ),
-        )
+          
+          //Button 3 (Undo Point)
+          Positioned(
+            right: 15,
+            top: 240,
+            child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 30,
+                    child: IconButton(
+                      color: Color(0xff91C07C),
+                      icon: Icon(Icons.undo),
+                      iconSize: 38.0,
+                      // alignment: Alignment.centerRight,
+
+                      onPressed: () {
+                        if (polygonLatLngs.length > 0) {
+                          setState(() {
+                            polygonLatLngs.removeLast();
+                          });
+                        }
+                      },
+                    )),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: TextButton(
+              onPressed: () {
+                if (polygonLatLngs.length >= 4) {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => ResultPage()));
+                }
+              },
+              child: Container(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.075,
+                    child: Center(
+                        child: Text(
+                      "Measure",
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    )),
+                  ),
+                  decoration: BoxDecoration(
+                      color: Color(0xff91C07C),
+                      borderRadius: BorderRadius.all(Radius.circular(15))
+                      )
+                      )
+                      )
+          ),
+          buildFloatingSearchBar(),
       ]),
     );
   }
