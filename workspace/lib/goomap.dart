@@ -62,7 +62,7 @@ class _GooMapState extends State<GooMap> {
   // The results button that will appear if an appropiate Polygon is selected
   // Right now, the Polygon is 'appropriate' if it has 4 or more points.
   // TODO: (Backend) make 'appropriate' - 4 or more points and an enclosed area.
-  Visibility resultsButton() {
+  /*Visibility resultsButton() {
     // TODO: Complete the design of the results button.
     return Visibility(
       child: ElevatedButton(
@@ -78,7 +78,7 @@ class _GooMapState extends State<GooMap> {
       ),
       visible: polygonLatLngs.length >= 4,
     );
-  }
+  }*/
 
   // Check if Polygon is simple
   // TODO: Complete isPolygonSimple function following steps below.
@@ -335,7 +335,7 @@ Widget buildFloatingSearchBar() {
               onPressed: () {
                 if (polygonLatLngs.length >= 4) {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => ResultPage()));
+                    context, MaterialPageRoute(builder: (context) => ResultPage(_locationData)));
                 }
               },
               child: Container(
