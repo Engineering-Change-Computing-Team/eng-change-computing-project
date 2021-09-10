@@ -43,12 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     // TODO: Complete design of home page.
     return Scaffold(
-      backgroundColor: Colors.grey[800],
-      appBar: AppBar(
-        title: Text("Starting Home Page"),
-        centerTitle: true,
-        backgroundColor: Colors.tealAccent,
-      ),
       floatingActionButton: FloatingActionButton.extended(
         // Transition to map page
         onPressed: () => _locationData != null
@@ -68,32 +62,38 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Container(
-        padding: EdgeInsets.all(16),
+      body: CustomPaint(
+        painter: CirclePainter(),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Starting Home Page',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+              //logo here
+              Image.asset(
+                'assets/images/eclogo.jpeg',
+                height: 200,
               ),
               SizedBox(
-                height: 20,
+                height: 220,
               ),
-              Text(
-                'Engineering Change',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              )
             ],
           ),
         ),
       ),
     );
   }
+}
+
+class CirclePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint1 = Paint()
+      ..color = Color(0xff91C07C)
+      ..style = PaintingStyle.fill;
+    //a circle
+    canvas.drawCircle(Offset(size.width * 0.5, 800), 300, paint1);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
