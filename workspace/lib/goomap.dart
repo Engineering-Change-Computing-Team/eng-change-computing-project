@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 //Expect this to receive the location data from the main page
 class GooMap extends StatefulWidget {
@@ -22,6 +24,7 @@ class _GooMapState extends State<GooMap> {
   LocationData _locationData;
   Completer _controller = Completer();
   GoogleMapController mapController;
+  String searchAdd;
 
   //Polygon initial set up
   Set<Polygon> _polygons = HashSet();
@@ -40,7 +43,9 @@ class _GooMapState extends State<GooMap> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    setState(() {
+      mapController = controller;
+    });
   }
 
   void locationUpdate() {
@@ -52,6 +57,15 @@ class _GooMapState extends State<GooMap> {
             zoom: 16),
       ),
     );
+  }
+
+  void searchAndNavigate() {
+    locationFromAddress(searchAdd).then((result) {
+      mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(result[0].latitude, result[0].longitude),
+        zoom: 10,
+      )));
+    });
   }
 
   int getIntersectionIndex(List<LatLng> poly) {
@@ -166,12 +180,11 @@ class _GooMapState extends State<GooMap> {
       transition: CircularFloatingSearchBarTransition(),
       actions: [
         FloatingSearchBarAction(
-          showIfOpened: false,
-          child: CircularButton(
-            icon: const Icon(Icons.place),
-            onPressed: () {},
-          ),
-        ),
+            showIfOpened: false,
+            child: CircularButton(
+              icon: const Icon(Icons.place),
+              onPressed: () {},
+            )),
         FloatingSearchBarAction.searchToClear(
           showIfClosed: false,
         ),
@@ -269,6 +282,43 @@ class _GooMapState extends State<GooMap> {
             }
           },
         ),
+        // SEARCH BAR
+        Positioned(
+          top: 30,
+          right: 15,
+          left: 15,
+          child: Container(
+            height: 50,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Enter Address',
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(
+                  left: 15,
+                  top: 15,
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Color(0xff91C87C),
+                  ),
+                  onPressed: searchAndNavigate,
+                  iconSize: 30,
+                ),
+              ),
+              onChanged: (val) {
+                setState(() {
+                  searchAdd = val;
+                });
+              },
+            ),
+          ),
+        ),
         // LAYER OF BUTTONS
         //Button 1 (get Location)
         Positioned(
@@ -351,7 +401,6 @@ class _GooMapState extends State<GooMap> {
                     decoration: BoxDecoration(
                         color: Color(0xff91C07C),
                         borderRadius: BorderRadius.all(Radius.circular(15)))))),
-        buildFloatingSearchBar(),
       ]),
     );
   }
