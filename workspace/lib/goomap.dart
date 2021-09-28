@@ -303,7 +303,6 @@ class _GooMapState extends State<GooMap> {
                 //print(
                 //    ' ----- POLYGONLATLNG LENGTH IS $polygonLatLngs.length ---- ');
                 if (polygonLatLngs.length > 3) {
-                  /*
                   Tuple2<LatLng, LatLng> rec =
                       approximateRectangle(polygonLatLngs);
                   LatLongConverter converter = new LatLongConverter();
@@ -317,9 +316,9 @@ class _GooMapState extends State<GooMap> {
                     bLeft.easting,
                     bLeft.northing
                   ];
-                  */
-                  TalkServer serverComm;
-                  serverComm.postData();
+
+                  //TalkServer serverComm;
+                  //serverComm.postData();
                   //print("************RECTANGLE: $rec");
                 }
 
