@@ -222,6 +222,56 @@ class _GooMapState extends State<GooMap> {
     );
   }
 
+  // (Lat, Lng) works as (y, x)
+  Tuple2 approximateRectangle(List<LatLng> shape) {
+    double maxLat = returnMaxLat(shape);
+    double minLng = returnMinLng(shape);
+
+    double minLat = returnMinLat(shape);
+    double maxLng = returnMaxLng(shape);
+
+    LatLng topRight = LatLng(maxLat, minLng);
+    LatLng bottomLeft = LatLng(minLat, maxLng);
+
+    return Tuple2<LatLng, LatLng>(topRight, bottomLeft);
+  }
+
+  double returnMaxLat(List<LatLng> shape) {
+    List<double> latValue = [];
+    shape.forEach((element) {
+      latValue.add(element.latitude);
+    });
+    return latValue
+        .reduce((value, element) => (value > element) ? value : element);
+  }
+
+  double returnMaxLng(List<LatLng> shape) {
+    List<double> lngValue = [];
+    shape.forEach((element) {
+      lngValue.add(element.longitude);
+    });
+    return lngValue
+        .reduce((value, element) => (value > element) ? value : element);
+  }
+
+  double returnMinLat(List<LatLng> shape) {
+    List<double> latValue = [];
+    shape.forEach((element) {
+      latValue.add(element.latitude);
+    });
+    return latValue
+        .reduce((value, element) => (value < element) ? value : element);
+  }
+
+  double returnMinLng(List<LatLng> shape) {
+    List<double> lngValue = [];
+    shape.forEach((element) {
+      lngValue.add(element.longitude);
+    });
+    return lngValue
+        .reduce((value, element) => (value < element) ? value : element);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,7 +287,7 @@ class _GooMapState extends State<GooMap> {
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           onTap: (point) {
-            print("-----------------------$_isPolygon");
+            // print("-----------------------$_isPolygon");
             if (_isPolygon) {
               setState(() {
                 polygonLatLngs.add(point);
@@ -247,8 +297,14 @@ class _GooMapState extends State<GooMap> {
                 bool isSimple = isSimpleTuple.item1;
                 int pos = isSimpleTuple.item2;
                 print("************LIST: $polygonLatLngs");
-                print("************TUPLE_ITEM1: $isSimple");
-                print("************TUPLE_ITEM2: $pos");
+                //print("************TUPLE_ITEM1: $isSimple");
+                //print("************TUPLE_ITEM2: $pos");
+
+                if (polygonLatLngs.length > 3) {
+                  Tuple2<LatLng, LatLng> rec =
+                      approximateRectangle(polygonLatLngs);
+                  print("************RECTANGLE: $rec");
+                }
 
                 // This is the position of the start of the line segment which
                 // intersects with the last line segment.
