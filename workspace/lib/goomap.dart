@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:latlong_to_osgrid/latlong_to_osgrid.dart';
 
 //Expect this to receive the location data from the main page
 class GooMap extends StatefulWidget {
@@ -303,6 +304,17 @@ class _GooMapState extends State<GooMap> {
                 if (polygonLatLngs.length > 3) {
                   Tuple2<LatLng, LatLng> rec =
                       approximateRectangle(polygonLatLngs);
+                  LatLongConverter converter = new LatLongConverter();
+                  OSRef tRight = converter.getOSGBfromDec(
+                      rec.item1.latitude, rec.item1.longitude);
+                  OSRef bLeft = converter.getOSGBfromDec(
+                      rec.item2.latitude, rec.item2.longitude);
+                  List<int> clipValues = [
+                    tRight.easting,
+                    tRight.northing,
+                    bLeft.easting,
+                    bLeft.northing
+                  ];
                   print("************RECTANGLE: $rec");
                 }
 
@@ -320,7 +332,6 @@ class _GooMapState extends State<GooMap> {
                 } else {
                   redrawPolygon(polygonLatLngs, changeCoordPos);
                   print("*******POLYGON IS NOT SIMPLE");
-
                   _setSimplePolygon();
                 }
                 /*print("---------------------------------------");

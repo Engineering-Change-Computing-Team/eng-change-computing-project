@@ -38,6 +38,7 @@ dependencies:
   material_floating_search_bar: ^0.3.4
   geolocator: ^7.6.0
   geocoding: ^2.0.1
+  latlong_to_osgrid: ^1.3.2
   
 
 dev_dependencies:
