@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'package:tuple/tuple.dart';
 import 'segment.dart';
+import 'talk_server.dart';
 import 'package:first_map_plotter/results.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -10,6 +11,7 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong_to_osgrid/latlong_to_osgrid.dart';
+import 'package:http/http.dart' as http;
 
 //Expect this to receive the location data from the main page
 class GooMap extends StatefulWidget {
@@ -298,10 +300,10 @@ class _GooMapState extends State<GooMap> {
                 bool isSimple = isSimpleTuple.item1;
                 int pos = isSimpleTuple.item2;
                 print("************LIST: $polygonLatLngs");
-                //print("************TUPLE_ITEM1: $isSimple");
-                //print("************TUPLE_ITEM2: $pos");
-
+                //print(
+                //    ' ----- POLYGONLATLNG LENGTH IS $polygonLatLngs.length ---- ');
                 if (polygonLatLngs.length > 3) {
+                  /*
                   Tuple2<LatLng, LatLng> rec =
                       approximateRectangle(polygonLatLngs);
                   LatLongConverter converter = new LatLongConverter();
@@ -315,7 +317,10 @@ class _GooMapState extends State<GooMap> {
                     bLeft.easting,
                     bLeft.northing
                   ];
-                  print("************RECTANGLE: $rec");
+                  */
+                  TalkServer serverComm;
+                  serverComm.postData();
+                  //print("************RECTANGLE: $rec");
                 }
 
                 // This is the position of the start of the line segment which
