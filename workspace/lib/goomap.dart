@@ -12,6 +12,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong_to_osgrid/latlong_to_osgrid.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 //Expect this to receive the location data from the main page
 class GooMap extends StatefulWidget {
@@ -90,6 +92,25 @@ class _GooMapState extends State<GooMap> {
       }
     }
     return -1;
+  }
+
+  Future<UserModel> createUser(String name, String jobTitle) async {
+    final String apiUrl = "https://reqres.in/api/users";
+
+    final response = await http
+        .post(Uri.parse(apiUrl), body: {"name": name, "job": jobTitle});
+
+    if (response.statusCode == 201) {
+      final String responseString = response.body;
+      print(' ------------- ');
+      print(' RESPONSE BODY: ');
+      print(responseString);
+      print(' ------------- ');
+
+      return userModelFromJson(responseString);
+    } else {
+      return null;
+    }
   }
 
   // Check if Polygon is simple
@@ -305,6 +326,7 @@ class _GooMapState extends State<GooMap> {
                 if (polygonLatLngs.length > 3) {
                   Tuple2<LatLng, LatLng> rec =
                       approximateRectangle(polygonLatLngs);
+                  /*
                   LatLongConverter converter = new LatLongConverter();
                   OSRef tRight = converter.getOSGBfromDec(
                       rec.item1.latitude, rec.item1.longitude);
@@ -316,9 +338,16 @@ class _GooMapState extends State<GooMap> {
                     bLeft.easting,
                     bLeft.northing
                   ];
+                  */
+                  void test() async {
+                    UserModel _user;
+                    final UserModel user = await createUser("KOBI", "STUDENT");
+                  }
 
-                  //TalkServer serverComm;
-                  //serverComm.postData();
+                  test();
+                  //Future<Album> futureAlbum;
+                  //futureAlbum = createAlbum("TEST SERVER");
+
                   //print("************RECTANGLE: $rec");
                 }
 
@@ -452,6 +481,8 @@ class _GooMapState extends State<GooMap> {
             child: TextButton(
                 onPressed: () {
                   if (polygonLatLngs.length >= 4) {
+                    Tuple2<LatLng, LatLng> rec =
+                        approximateRectangle(polygonLatLngs);
                     Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.first_map_plotter">
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="first_map_plotter"
         android:icon="@mipmap/ic_launcher">

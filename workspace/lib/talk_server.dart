@@ -1,53 +1,33 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-//var url = 'http://127.0.0.1:5000/lat_lng/carbon';
+UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 
-Future<Album> createAlbum(String title) async {
-  final response = await http.post(
-    Uri.parse('https://jsonplaceholder.typicode.com/albums'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'title': title,
-    }),
-  );
+String userModelToJson(UserModel data) => json.encode(data.toJson());
 
-  if (response.statusCode == 201) {
-    // If the server did return a 201 CREATED response,
-    // then parse the JSON.
-    return Album.fromJson(jsonDecode(response.body));
-  } else {
-    // If the server did not return a 201 CREATED response,
-    // then throw an exception.
-    throw Exception('Failed to create album.');
-  }
+class UserModel {
+  String name;
+  String job;
+  String id;
+  DateTime createdAt;
+
+  UserModel({
+    this.name,
+    this.job,
+    this.id,
+    this.createdAt,
+  });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        name: json["name"],
+        job: json["job"],
+        id: json["id"],
+        createdAt: DateTime.parse(json["createdAt"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "job": job,
+        "id": id,
+        "createdAt": createdAt.toIso8601String(),
+      };
 }
-
-class Album {
-  final int id;
-  final String title;
-
-  Album({required this.id, required this.title});
-
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      id: json['id'],
-      title: json['title'],
-    );
-  }
-}
-
-
-
-
-// class TalkServer {
-//   postData() async {
-//     var response = http.post(Uri.parse(url),
-//         body: {"latitude": 1.toString(), "longitude": 2.toString()});
-//     print(' ----- server response is: ------ ');
-//     print(response);
-//     print(' -------------------------------- ');
-//   }
-// }
