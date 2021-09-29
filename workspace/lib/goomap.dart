@@ -95,8 +95,8 @@ class _GooMapState extends State<GooMap> {
   }
 
   Future<UserModel> createUser(String name, String jobTitle) async {
-    final String apiUrl = "https://reqres.in/api/users";
-
+    //final String apiUrl = "https://reqres.in/api/users";
+    final String apiUrl = "http://127.0.0.1:5000/lat_lng/carbon";
     final response = await http
         .post(Uri.parse(apiUrl), body: {"name": name, "job": jobTitle});
 
