@@ -96,11 +96,14 @@ class _GooMapState extends State<GooMap> {
 
   Future<UserModel> createUser(String name, String jobTitle) async {
     //final String apiUrl = "https://reqres.in/api/users";
-    final String apiUrl = "http://127.0.0.1:5000/lat_lng/carbon";
+    final String apiUrl = "http://10.0.2.2:5000/lat_long/carbon";
     final response = await http
         .post(Uri.parse(apiUrl), body: {"name": name, "job": jobTitle});
-
-    if (response.statusCode == 201) {
+    print('----------------');
+    print(' STATUS CODE: ');
+    print(response.statusCode);
+    print('----------------');
+    if (response.statusCode == 200) {
       final String responseString = response.body;
       print(' ------------- ');
       print(' RESPONSE BODY: ');
@@ -146,8 +149,7 @@ class _GooMapState extends State<GooMap> {
     LatLng lastPoint = poly[polygonLatLngs.length - 1];
     poly.remove(lastPoint);
     poly.insert(changeCoordPos + 1, lastPoint);
-    print("*******REORDERED LIST: $poly");
-    //for (int i = changeCoordPos; i < polygonLatLngs.length - 1; i++) {}
+    //print("*******REORDERED LIST: $poly");
   }
 
   // Draw this type of Polygon to the map if it has less than 3 points.
@@ -311,7 +313,6 @@ class _GooMapState extends State<GooMap> {
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           onTap: (point) {
-            // print("-----------------------$_isPolygon");
             if (_isPolygon) {
               setState(() {
                 polygonLatLngs.add(point);
@@ -320,9 +321,7 @@ class _GooMapState extends State<GooMap> {
 
                 bool isSimple = isSimpleTuple.item1;
                 int pos = isSimpleTuple.item2;
-                print("************LIST: $polygonLatLngs");
-                //print(
-                //    ' ----- POLYGONLATLNG LENGTH IS $polygonLatLngs.length ---- ');
+
                 if (polygonLatLngs.length > 3) {
                   Tuple2<LatLng, LatLng> rec =
                       approximateRectangle(polygonLatLngs);
@@ -341,13 +340,11 @@ class _GooMapState extends State<GooMap> {
                   */
                   void test() async {
                     UserModel _user;
+                    print(' ----- IN void test() -----');
                     final UserModel user = await createUser("KOBI", "STUDENT");
                   }
 
                   test();
-                  //Future<Album> futureAlbum;
-                  //futureAlbum = createAlbum("TEST SERVER");
-
                   //print("************RECTANGLE: $rec");
                 }
 

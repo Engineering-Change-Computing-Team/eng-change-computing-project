@@ -1,7 +1,12 @@
 import functools
-from server.carbon_calc import format_data
-from carbon_calc import *
+import sys
+#sys.path.append("...")
+#from ...carbon_calc import format_data
 
+# REALLY WERID BECAUSE SEEMS TO FIND URL WITH LINE 6, BUT NOT WHEN ERROR RESOLVED WITH LINE 10
+
+sys.path.append('/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/')
+from carbon_calc import format_data
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
@@ -15,7 +20,13 @@ bp = Blueprint('lat_long', __name__, url_prefix='/lat_long')
 
 @bp.route('/carbon', methods=('GET', 'POST'))
 def carbon():
-    if request.method == 'POST':
-        format_data.crop_image(request.data) # ... ?
-    return "HELLO"
+    #if request.method == 'POST':
+    #    format_data.crop_image(request.data)
+    t = {
+        "name": "JERRY",
+        "job": "PLUMBER",
+        "id": "20",
+        "createdAt": "1"
+        }
+    return t
 

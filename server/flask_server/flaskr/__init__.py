@@ -28,8 +28,7 @@ def create_app(test_config=None):
 
     @app.route('/hello')
     def hello():
-        return 'Hello, World!'
-
+        return 'Helloooooo'
     from . import lat_long
     app.register_blueprint(lat_long.bp)
     return app

@@ -1,9 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.first_map_plotter">
    <uses-permission android:name="android.permission.INTERNET"/>
+   <!-- no sure about next line ... -->
+   <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
    <application
         android:label="first_map_plotter"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"> <!-- unsure abt this line-->
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

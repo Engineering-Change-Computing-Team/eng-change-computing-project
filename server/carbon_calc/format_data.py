@@ -1,5 +1,5 @@
 from .ML import *
-from osgeo import gdal
+#from osgeo import gdal
 
 
 def crop_image():
