@@ -94,6 +94,8 @@ class _GooMapState extends State<GooMap> {
     return -1;
   }
 
+  /*
+
   Future<UserModel> createUser(String name, String jobTitle) async {
     //final String apiUrl = "https://reqres.in/api/users";
     final String apiUrl = "http://10.0.2.2:5000/lat_long/carbon";
@@ -111,6 +113,35 @@ class _GooMapState extends State<GooMap> {
       print(' ------------- ');
 
       return userModelFromJson(responseString);
+    } else {
+      return null;
+    }
+  }
+  */
+
+  Future<Coords> sendCoords(LatLng top_l, LatLng btm_r) async {
+    //final String apiUrl = "https://reqres.in/api/users";
+
+    print(' ---- IN SEND COORDS ----- ');
+    final String apiUrl = "http://10.0.2.2:5000/lat_long/carbon";
+    final response = await http.post(Uri.parse(apiUrl), body: {
+      "top_l_lat": top_l.latitude.toString(), // does it need to be a string?
+      "top_l_long": top_l.longitude.toString(),
+      "btm_r_lat": btm_r.latitude.toString(),
+      "btm_r_long": btm_r.longitude.toString()
+    });
+    print('----------------');
+    print(' STATUS CODE: ');
+    print(response.statusCode);
+    print('----------------');
+    if (response.statusCode == 200) {
+      final String responseString = response.body;
+      print(' ------------- ');
+      print(' RESPONSE BODY: ');
+      print(responseString);
+      print(' ------------- ');
+
+      return coordsFromJson(responseString);
     } else {
       return null;
     }
@@ -149,7 +180,6 @@ class _GooMapState extends State<GooMap> {
     LatLng lastPoint = poly[polygonLatLngs.length - 1];
     poly.remove(lastPoint);
     poly.insert(changeCoordPos + 1, lastPoint);
-    //print("*******REORDERED LIST: $poly");
   }
 
   // Draw this type of Polygon to the map if it has less than 3 points.
@@ -339,9 +369,10 @@ class _GooMapState extends State<GooMap> {
                   ];
                   */
                   void test() async {
-                    UserModel _user;
+                    Coords _aCoord;
                     print(' ----- IN void test() -----');
-                    final UserModel user = await createUser("KOBI", "STUDENT");
+                    final Coords aCoord =
+                        await sendCoords(rec.item1, rec.item2);
                   }
 
                   test();

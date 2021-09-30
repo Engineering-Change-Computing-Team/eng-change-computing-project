@@ -22,11 +22,8 @@ bp = Blueprint('lat_long', __name__, url_prefix='/lat_long')
 def carbon():
     #if request.method == 'POST':
     #    format_data.crop_image(request.data)
-    t = {
-        "name": "JERRY",
-        "job": "PLUMBER",
-        "id": "20",
-        "createdAt": "1"
-        }
-    return t
+
+    print(' REQUEST: ')
+    print(request.form)
+    return request.form
 
