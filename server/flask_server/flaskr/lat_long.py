@@ -5,7 +5,7 @@ import sys
 
 # REALLY WERID BECAUSE SEEMS TO FIND URL WITH LINE 6, BUT NOT WHEN ERROR RESOLVED WITH LINE 10
 
-sys.path.append('/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/')
+sys.path.append('/Users/david/FlutterProjects/EngChange/SndRepo/eng-change-computing-project/server/')
 from carbon_calc import format_data
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
