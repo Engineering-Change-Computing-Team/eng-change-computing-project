@@ -2,6 +2,7 @@ import os
 from flask import Flask
 
 # RUN THESE COMMANDS IN 'flask_server' DIRECTORY TO RUN SERVER:
+#  -- FOR MAC ---
 
 # export FLASK_APP=flaskr
 # export FLASK_ENV=development
@@ -26,9 +27,6 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route('/hello')
-    def hello():
-        return 'Helloooooo'
     from . import lat_long
     app.register_blueprint(lat_long.bp)
     return app

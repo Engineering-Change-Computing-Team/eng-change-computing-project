@@ -58,12 +58,17 @@ def evaluate(model_path, input_path, isLog):
 
 
 # Function to plot prediction data and error data
-def plot_graph(result_data, err_data, title, map_style, out_file_name):
+def plot_graph(result_data, err_data, title, map_style, out_file_name, x_coord_l, x_coord_r, y_coord_t, y_coord_b):
     # Set font
+    print(' ------------------------- ')
+    print(' x_l: ', x_coord_l, '  x_r: ', x_coord_r, '  y_t: ', y_coord_t, '  y_b: ', y_coord_b)
+    print(' ------------------------- ')
     fontprops = fm.FontProperties(size=12)
     # Coordinates corresponding to our study area
-    x_coord_l, x_coord_r = -3.7037717, -2.7696528
-    y_coord_t, y_coord_b = 55.7541937, 55.4075244
+    
+    #x_coord_l, x_coord_r = -3.7037717, -2.7696528
+    #y_coord_t, y_coord_b = 55.7541937, 55.4075244
+    
     # Store data shape
     x_shape = result_data.shape[1]
     y_shape = result_data.shape[0]
@@ -185,7 +190,7 @@ def plot_single_graph(result_data, map_style, out_file_name):
 # Get SOC Ground Truth
 #soc_truth = rasterio.open(fr'C:\Users\admin\OneDrive\Computing\Yr5 Advanced Computing\MAC Project\Carbon-Trading-Verification\scotland_carbon\data\Train_SOCS_0-30_27700_clipped.tif').read(1)
 
-def main():
+def main(x_coord_l, x_coord_r, y_coord_t, y_coord_b):
     soc_truth = rasterio.open(fr'/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/carbon_calc/ML/Carbon-Trading-Verfication/scotland_carbon/data/Train_SOCS_0-30_27700_clipped.tif').read(1)
     
     # Get SOC Prediction
@@ -200,7 +205,7 @@ def main():
     # Get AGB Prediction
     agb_result = evaluate(model_paths['model_H'], input_paths['model_H'], False)
     # Uncomment to plot agb predicion and error graphs
-    plot_graph(agb_result, np.abs(agb_truth - agb_result[:130, :192]), 'YlGn','viridis' ,fr'/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/flask_server/carbon_prediction_images/')
+    plot_graph(agb_result, np.abs(agb_truth - agb_result[:130, :192]), 'YlGn','viridis' ,fr'/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/flask_server/carbon_prediction_images/graph', x_coord_l, x_coord_r, y_coord_t, y_coord_b)
 
     # Uncomment to plot total carbon ground truth 
     # plot_single_graph(

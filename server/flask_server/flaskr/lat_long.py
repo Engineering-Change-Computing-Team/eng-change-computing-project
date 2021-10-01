@@ -18,9 +18,17 @@ def carbon():
     #if request.method == 'POST':
     #    format_data.crop_image(request.data)
 
-    print(' REQUEST: ')
-    print(request.form)
-    main()
+    # latitude is y, longitude is x
+    print(' ---- request.form[top_l_lat] ---- ', request.form['top_l_lat'])
+    print(' ---- request.form[top_l_long] ---- ', request.form['top_l_long'])
+    print(' ---- request.form[btm_r_lat] ---- ', request.form['btm_r_lat'])
+    print(' ---- request.form[btm_r_long] ---- ', request.form['btm_r_long'])
+    main(
+        float(request.form['top_l_long']),
+        float(request.form['btm_r_long']),
+        float(request.form['top_l_lat']),
+        float(request.form['btm_r_lat'])
+        )
     # return request.form
     return send_file('/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/flask_server/carbon_prediction_images/graph.png', mimetype='image/png')
 
