@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'package:tuple/tuple.dart';
 import 'segment.dart';
+import 'dart:convert';
 import 'talk_server.dart';
 import 'package:first_map_plotter/results.dart';
 import 'package:flutter/material.dart';
@@ -119,13 +120,13 @@ class _GooMapState extends State<GooMap> {
   }
   */
 
-  Future<Coords> sendCoords(LatLng top_l, LatLng btm_r) async {
+  Future<Image> sendCoords(LatLng top_l, LatLng btm_r) async {
     //final String apiUrl = "https://reqres.in/api/users";
 
     print(' ---- IN SEND COORDS ----- ');
     final String apiUrl = "http://10.0.2.2:5000/lat_long/carbon";
     final response = await http.post(Uri.parse(apiUrl), body: {
-      "top_l_lat": top_l.latitude.toString(), // does it need to be a string?
+      "top_l_lat": top_l.latitude.toString(),
       "top_l_long": top_l.longitude.toString(),
       "btm_r_lat": btm_r.latitude.toString(),
       "btm_r_long": btm_r.longitude.toString()
@@ -136,12 +137,14 @@ class _GooMapState extends State<GooMap> {
     print('----------------');
     if (response.statusCode == 200) {
       final String responseString = response.body;
-      print(' ------------- ');
-      print(' RESPONSE BODY: ');
-      print(responseString);
-      print(' ------------- ');
-
-      return coordsFromJson(responseString);
+      // print(' ------------- ');
+      // print(' RESPONSE BODY: ');
+      // print(responseString);
+      // print(' ------------- ');
+      // // final carbonPlot = await Image.memory(response.bodyBytes).image;
+      var carbonPlot = await Image.memory(response.bodyBytes);
+      return carbonPlot;
+      //return coordsFromJson(responseString);
     } else {
       return null;
     }
@@ -355,28 +358,21 @@ class _GooMapState extends State<GooMap> {
                 if (polygonLatLngs.length > 3) {
                   Tuple2<LatLng, LatLng> rec =
                       approximateRectangle(polygonLatLngs);
-                  /*
-                  LatLongConverter converter = new LatLongConverter();
-                  OSRef tRight = converter.getOSGBfromDec(
-                      rec.item1.latitude, rec.item1.longitude);
-                  OSRef bLeft = converter.getOSGBfromDec(
-                      rec.item2.latitude, rec.item2.longitude);
-                  List<int> clipValues = [
-                    tRight.easting,
-                    tRight.northing,
-                    bLeft.easting,
-                    bLeft.northing
-                  ];
-                  */
                   void test() async {
-                    Coords _aCoord;
+                    //Coords _aCoord;
                     print(' ----- IN void test() -----');
-                    final Coords aCoord =
+                    // final Coords aCoord =
+                    //     await sendCoords(rec.item1, rec.item2);
+                    final Image carbonPlot =
                         await sendCoords(rec.item1, rec.item2);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ResultPage(_locationData, carbonPlot)));
                   }
 
                   test();
-                  //print("************RECTANGLE: $rec");
                 }
 
                 // This is the position of the start of the line segment which
@@ -511,10 +507,11 @@ class _GooMapState extends State<GooMap> {
                   if (polygonLatLngs.length >= 4) {
                     Tuple2<LatLng, LatLng> rec =
                         approximateRectangle(polygonLatLngs);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ResultPage(_locationData)));
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) =>
+                    //             ResultPage(_locationData, AssetImage())));
                   }
                 },
                 child: Container(
