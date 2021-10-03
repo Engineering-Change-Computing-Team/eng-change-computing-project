@@ -58,7 +58,7 @@ def evaluate(model_path, input_path, isLog):
 
 
 # Function to plot prediction data and error data
-def plot_graph(result_data, err_data, title, map_style, out_file_name, x_coord_l, x_coord_r, y_coord_t, y_coord_b):
+def plot_graph(result_data, title, map_style, out_file_name, x_coord_l, x_coord_r, y_coord_t, y_coord_b):
     # Set font
     print(' ------------------------- ')
     print(' x_l: ', x_coord_l, '  x_r: ', x_coord_r, '  y_t: ', y_coord_t, '  y_b: ', y_coord_b)
@@ -85,15 +85,15 @@ def plot_graph(result_data, err_data, title, map_style, out_file_name, x_coord_l
 
     ###################################################################################
     # Specify grid ratio
-    gridspec = {'width_ratios': [1, 1, 0.1]}
+    gridspec = {'width_ratios': [1, 0.1]}
     # Create figure and subplots
-    fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, nrows=1, figsize=(9, 4), gridspec_kw=gridspec)
+    fig, (ax1, ax3) = plt.subplots(ncols=2, nrows=1, figsize=(9, 4), gridspec_kw=gridspec)
     
     # Set formatter for x and y axis
     ax1.xaxis.set_major_formatter(plt.FuncFormatter(x_format_func))
-    ax2.xaxis.set_major_formatter(plt.FuncFormatter(x_format_func))
+    #ax2.xaxis.set_major_formatter(plt.FuncFormatter(x_format_func))
     ax1.xaxis.set_major_locator(plt.MaxNLocator(7))
-    ax2.xaxis.set_major_locator(plt.MaxNLocator(7))
+    #ax2.xaxis.set_major_locator(plt.MaxNLocator(7))
     ax1.yaxis.set_major_formatter(plt.FuncFormatter(y_format_func))
 
     # Set scalebar for left and right subplot
@@ -105,25 +105,25 @@ def plot_graph(result_data, err_data, title, map_style, out_file_name, x_coord_l
                                size_vertical=1,
                                fontproperties=fontprops)
     
-    scalebar2 = AnchoredSizeBar(ax2.transData,
-                               33.3, '10 km', 'lower right', 
-                               pad=0.1,
-                               color='black',
-                               frameon=False,
-                               size_vertical=1,
-                               fontproperties=fontprops)
+    # scalebar2 = AnchoredSizeBar(ax2.transData,
+    #                            33.3, '10 km', 'lower right', 
+    #                            pad=0.1,
+    #                            color='black',
+    #                            frameon=False,
+    #                            size_vertical=1,
+    #                            fontproperties=fontprops)
 
     # Add scale bar to subplots
     ax1.add_artist(scalebar1)
-    ax2.add_artist(scalebar2)
+    #ax2.add_artist(scalebar2)
     # Set title to subplots
     ax1.set_title('Prediction Map', size=10)
-    ax2.set_title('Error Map', size=10)
+    #ax2.set_title('Error Map', size=10)
     
     # Set prediction plot and error plot with colour map
     pred_plot = ax1.imshow(result_data, cmap = map_style)
-    err_plot = ax2.imshow(err_data, cmap = map_style)
-    ax2.get_yaxis().set_visible(False)
+    #err_plot = ax2.imshow(err_data, cmap = map_style)
+    #ax2.get_yaxis().set_visible(False)
     
     # Set figure labels - latitude and longitude
     fig.text(0.5, 0.12, 'Longitude', ha='center')
@@ -190,7 +190,7 @@ def plot_single_graph(result_data, map_style, out_file_name):
 # Get SOC Ground Truth
 #soc_truth = rasterio.open(fr'C:\Users\admin\OneDrive\Computing\Yr5 Advanced Computing\MAC Project\Carbon-Trading-Verification\scotland_carbon\data\Train_SOCS_0-30_27700_clipped.tif').read(1)
 
-def main(x_coord_l, x_coord_r, y_coord_t, y_coord_b):
+def main(path_to_rasterio, x_coord_l, x_coord_r, y_coord_t, y_coord_b):
     soc_truth = rasterio.open(fr'/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/carbon_calc/ML/Carbon-Trading-Verfication/scotland_carbon/data/Train_SOCS_0-30_27700_clipped.tif').read(1)
     
     # Get SOC Prediction
@@ -203,9 +203,9 @@ def main(x_coord_l, x_coord_r, y_coord_t, y_coord_b):
     #agb_truth = rasterio.open(fr'C:\Users\admin\OneDrive\Computing\Yr5 Advanced Computing\MAC Project\Carbon-Trading-Verification\scotland_carbon\data\agb_c1_27700_300m_clipped.tif').read(1)
     agb_truth = rasterio.open(fr'/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/carbon_calc/ML/Carbon-Trading-Verfication/scotland_carbon/data/agb_c1_27700_300m_clipped.tif').read(1)
     # Get AGB Prediction
-    agb_result = evaluate(model_paths['model_H'], input_paths['model_H'], False)
+    agb_result = evaluate(model_paths['model_H'], path_to_rasterio, False)
     # Uncomment to plot agb predicion and error graphs
-    plot_graph(agb_result, np.abs(agb_truth - agb_result[:130, :192]), 'YlGn','viridis' ,fr'/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/flask_server/carbon_prediction_images/graph', x_coord_l, x_coord_r, y_coord_t, y_coord_b)
+    plot_graph(agb_result, 'YlGn','viridis' ,fr'/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/flask_server/carbon_prediction_images/graph_1', x_coord_l, x_coord_r, y_coord_t, y_coord_b)
 
     # Uncomment to plot total carbon ground truth 
     # plot_single_graph(
@@ -225,7 +225,10 @@ def main(x_coord_l, x_coord_r, y_coord_t, y_coord_b):
     # plot_single_graph(
     #     agb_result+soc_result, 
     #     'YlOrRd' ,
-    #     '../../report_output/exp1-joint/carbon_maps/total_carbon_map_pred.png'
+    #     '/Users/kobikelemen/flutter/packages/eng-change-computing-project/server/carbon_calc/ML/Carbon-Trading-Verfication/scotland_carbon/report_output/exp1-joint/carbon_maps/total_carbon_map_pred_1.png'
     #     )
 
 
+if __name__ == '__main__':
+    pass
+    #main(-3.7037717, -2.7696528, 55.7541937, 55.4075244)

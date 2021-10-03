@@ -1,12 +1,9 @@
-from .ML import *
-#from osgeo import gdal
-#import pandas as pd
+from osgeo import gdal
+import pandas as pd
+from OSGridConverter import latlong2grid
 
-
-
-"""
 def crop_image(
-    xmin, ymin, xmax, ymax,
+    tl_lat, tl_long, br_lat, br_long,
     path_to_outputs = "/Users/kobikelemen/flutter/packages/gdal_outputs", 
     path_to_terrence = "/Users/kobikelemen/Carbon-Trading-Verfication",
     ):
@@ -16,7 +13,17 @@ def crop_image(
    rasout = path_to_outputs + "/output1.tif"
    # Define clipping extent
    # INSERT HERE THE CORRECT COORDINATES
-   result = gdal.Warp(rasout, rasin, outputBounds=(xmin, ymin, xmax, ymax))
+   # RASTER IMAGE PATH RETURNED
+   top_l = latlong2grid(tl_lat, tl_long)
+   btm_r = latlong2grid(br_lat, br_long)
+   print(' ------------------------------------- ')
+   print(' TOP_L.E: ' ,top_l.E, '  BTM_R.N: ', btm_r.N, '  BTM_R.E: ', btm_r.E, '  TOP_L.N: ', top_l.N)
+   print(' ------------------------------------- ')
+   #result = gdal.Warp(rasout, rasin, outputBounds=(xmin, ymin, xmax, ymax))
+   result = gdal.Warp(rasout, rasin, outputBounds=(top_l.E, btm_r.N, btm_r.E, top_l.N), xRes = 800, yRes=800)#, width=2000, height=3000)
+   return rasout
+
+"""
    xyz = gdal.Translate(
     path_to_outputs + "/outputXYZ.xyz", rasout)
    xyz = None
@@ -28,3 +35,11 @@ def crop_image(
    finalCSV = path_to_outputs + "/outputCSV.csv"
    return finalCSV 
 """
+if __name__ == '__main__':
+
+   path = crop_image(
+      55.623897157178575, 
+      -3.156345784664154, 
+      55.58755107155721, 
+      -3.1074367091059685
+      )

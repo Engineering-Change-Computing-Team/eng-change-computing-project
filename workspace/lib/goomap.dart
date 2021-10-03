@@ -95,30 +95,7 @@ class _GooMapState extends State<GooMap> {
     return -1;
   }
 
-  /*
 
-  Future<UserModel> createUser(String name, String jobTitle) async {
-    //final String apiUrl = "https://reqres.in/api/users";
-    final String apiUrl = "http://10.0.2.2:5000/lat_long/carbon";
-    final response = await http
-        .post(Uri.parse(apiUrl), body: {"name": name, "job": jobTitle});
-    print('----------------');
-    print(' STATUS CODE: ');
-    print(response.statusCode);
-    print('----------------');
-    if (response.statusCode == 200) {
-      final String responseString = response.body;
-      print(' ------------- ');
-      print(' RESPONSE BODY: ');
-      print(responseString);
-      print(' ------------- ');
-
-      return userModelFromJson(responseString);
-    } else {
-      return null;
-    }
-  }
-  */
 
   Future<Image> sendCoords(LatLng top_l, LatLng btm_r) async {
     //final String apiUrl = "https://reqres.in/api/users";
@@ -131,20 +108,20 @@ class _GooMapState extends State<GooMap> {
       "btm_r_lat": btm_r.latitude.toString(),
       "btm_r_long": btm_r.longitude.toString()
     });
+
     print('----------------');
     print(' STATUS CODE: ');
     print(response.statusCode);
     print('----------------');
     if (response.statusCode == 200) {
       final String responseString = response.body;
-      // print(' ------------- ');
-      // print(' RESPONSE BODY: ');
-      // print(responseString);
-      // print(' ------------- ');
-      // // final carbonPlot = await Image.memory(response.bodyBytes).image;
+      print(' ------------- ');
+      print(' RESPONSE BODY: ');
+      print(responseString);
+      print(' ------------- ');
       var carbonPlot = await Image.memory(response.bodyBytes);
       return carbonPlot;
-      //return coordsFromJson(responseString);
+      // return coordsFromJson(responseString);
     } else {
       return null;
     }
@@ -358,13 +335,16 @@ class _GooMapState extends State<GooMap> {
                 if (polygonLatLngs.length > 3) {
                   Tuple2<LatLng, LatLng> rec =
                       approximateRectangle(polygonLatLngs);
+
                   void test() async {
-                    //Coords _aCoord;
+                    // UserModel _aUser;
                     print(' ----- IN void test() -----');
-                    // final Coords aCoord =
-                    //     await sendCoords(rec.item1, rec.item2);
+                    // final UserModel aUser = await createUser("Kob", "stu");
+
                     final Image carbonPlot =
                         await sendCoords(rec.item1, rec.item2);
+                    // final Coords aCoord =
+                    //     await sendCoords(rec.item1, rec.item2);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
