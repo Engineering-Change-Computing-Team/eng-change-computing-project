@@ -30,27 +30,24 @@ class _ResultPageState extends State<ResultPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: Complete design of results page.
-    /*return Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              container(
-              height: 50,
-              width: double.infinity,
-              color: Color(0xff91C87C),
-            ),
-            value(),
-              SizedBox(
-              height: 250,
-            ),
-            three_icons(locationData)
-              )
-    );*/
     return Scaffold(
         backgroundColor: Colors.white,
-        body: Center(
-          child: graph,
-        ));
+        body: SingleChildScrollView(
+            child: Column(children: [
+          Container(
+            height: 50,
+            width: double.infinity,
+            color: Color(0xff91C87C),
+          ),
+          value(graph),
+          Container(
+              child: Center(
+            child: graph,
+          )),
+          SizedBox(
+            height: 50,
+          ),
+          three_icons(locationData)
+        ])));
   }
 }

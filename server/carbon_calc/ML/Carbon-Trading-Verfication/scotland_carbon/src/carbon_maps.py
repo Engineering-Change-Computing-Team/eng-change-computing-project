@@ -127,8 +127,8 @@ def plot_graph(result_data, title, map_style, out_file_name, x_coord_l, x_coord_
     #ax2.get_yaxis().set_visible(False)
     
     # Set figure labels - latitude and longitude
-    fig.text(0.5, 0.12, 'Longitude', ha='center')
-    fig.text(0.04, 0.5, 'Latitude', va='center', rotation='vertical')
+    # fig.text(0.5, 0.12, 'Longitude', ha='center')
+    # fig.text(0.04, 0.5, 'Latitude', va='center', rotation='vertical')
     
     # Set colour bar and its axis
     cbar = plt.colorbar(pred_plot, cax=ax3)
@@ -150,6 +150,8 @@ def plot_single_graph(result_data, map_style, out_file_name):
     x_shape = result_data.shape[1]
     y_shape = result_data.shape[0]
 
+
+    
     # Format x coordinates
     def x_format_func(value, tick_number):
         out = (x_coord_l + (value / x_shape * (x_coord_r - x_coord_l)))
@@ -159,6 +161,7 @@ def plot_single_graph(result_data, map_style, out_file_name):
     def y_format_func(value, tick_number):
         out = (y_coord_t - (value / y_shape * (y_coord_t - y_coord_b)))
         return "{v:.2f}\N{DEGREE SIGN}".format(v=out)
+    
 
     ###################################################################################
     # Set formatter for x and y axis

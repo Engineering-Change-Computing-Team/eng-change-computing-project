@@ -314,6 +314,7 @@ class _GooMapState extends State<GooMap> {
     final Image carbonPlot = await sendCoords(rectangle.item1, rectangle.item2);
     // final Coords aCoord =
     //     await sendCoords(rec.item1, rec.item2);
+
     Navigator.push(
         context,
         MaterialPageRoute(
