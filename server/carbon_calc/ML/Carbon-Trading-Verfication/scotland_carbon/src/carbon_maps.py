@@ -97,13 +97,13 @@ def plot_graph(result_data, title, map_style, out_file_name, x_coord_l, x_coord_
     ax1.yaxis.set_major_formatter(plt.FuncFormatter(y_format_func))
 
     # Set scalebar for left and right subplot
-    scalebar1 = AnchoredSizeBar(ax1.transData,
-                               33.3, '10 km', 'lower right', 
-                               pad=0.1,
-                               color='black',
-                               frameon=False,
-                               size_vertical=1,
-                               fontproperties=fontprops)
+    # scalebar1 = AnchoredSizeBar(ax1.transData,
+    #                            33.3, '10 km', 'lower right', 
+    #                            pad=0.1,
+    #                            color='black',
+    #                            frameon=False,
+    #                            size_vertical=1,
+    #                            fontproperties=fontprops)
     
     # scalebar2 = AnchoredSizeBar(ax2.transData,
     #                            33.3, '10 km', 'lower right', 
@@ -114,7 +114,8 @@ def plot_graph(result_data, title, map_style, out_file_name, x_coord_l, x_coord_
     #                            fontproperties=fontprops)
 
     # Add scale bar to subplots
-    ax1.add_artist(scalebar1)
+    # ax1.add_artist(scalebar1)
+
     #ax2.add_artist(scalebar2)
     # Set title to subplots
     ax1.set_title('Prediction Map', size=10)

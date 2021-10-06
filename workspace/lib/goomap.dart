@@ -95,8 +95,6 @@ class _GooMapState extends State<GooMap> {
     return -1;
   }
 
-
-
   Future<Image> sendCoords(LatLng top_l, LatLng btm_r) async {
     //final String apiUrl = "https://reqres.in/api/users";
 
@@ -114,11 +112,11 @@ class _GooMapState extends State<GooMap> {
     print(response.statusCode);
     print('----------------');
     if (response.statusCode == 200) {
-      final String responseString = response.body;
-      print(' ------------- ');
-      print(' RESPONSE BODY: ');
-      print(responseString);
-      print(' ------------- ');
+      // final String responseString = response.body;
+      // print(' ------------- ');
+      // print(' RESPONSE BODY: ');
+      // print(responseString);
+      // print(' ------------- ');
       var carbonPlot = await Image.memory(response.bodyBytes);
       return carbonPlot;
       // return coordsFromJson(responseString);
@@ -259,7 +257,7 @@ class _GooMapState extends State<GooMap> {
   }
 
   // (Lat, Lng) works as (y, x)
-  Tuple2 approximateRectangle(List<LatLng> shape) {
+  Tuple2<LatLng, LatLng> approximateRectangle(List<LatLng> shape) {
     double maxLat = returnMaxLat(shape);
     double minLng = returnMinLng(shape);
 
@@ -308,14 +306,28 @@ class _GooMapState extends State<GooMap> {
         .reduce((value, element) => (value < element) ? value : element);
   }
 
+  void test(Tuple2<LatLng, LatLng> rectangle) async {
+    // UserModel _aUser;
+    print(' ----- IN void test() -----');
+    // final UserModel aUser = await createUser("Kob", "stu");
+
+    final Image carbonPlot = await sendCoords(rectangle.item1, rectangle.item2);
+    // final Coords aCoord =
+    //     await sendCoords(rec.item1, rec.item2);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ResultPage(_locationData, carbonPlot)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(children: [
         GoogleMap(
           initialCameraPosition: CameraPosition(
-            target: LatLng(_locationData.latitude, _locationData.longitude),
-            zoom: 16,
+            target: LatLng(55.6531, 3.1936),
+            zoom: 5,
           ),
           mapType: MapType.hybrid,
           onMapCreated: _onMapCreated,
@@ -331,29 +343,6 @@ class _GooMapState extends State<GooMap> {
 
                 bool isSimple = isSimpleTuple.item1;
                 int pos = isSimpleTuple.item2;
-
-                if (polygonLatLngs.length > 3) {
-                  Tuple2<LatLng, LatLng> rec =
-                      approximateRectangle(polygonLatLngs);
-
-                  void test() async {
-                    // UserModel _aUser;
-                    print(' ----- IN void test() -----');
-                    // final UserModel aUser = await createUser("Kob", "stu");
-
-                    final Image carbonPlot =
-                        await sendCoords(rec.item1, rec.item2);
-                    // final Coords aCoord =
-                    //     await sendCoords(rec.item1, rec.item2);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ResultPage(_locationData, carbonPlot)));
-                  }
-
-                  test();
-                }
 
                 // This is the position of the start of the line segment which
                 // intersects with the last line segment.
@@ -487,11 +476,7 @@ class _GooMapState extends State<GooMap> {
                   if (polygonLatLngs.length >= 4) {
                     Tuple2<LatLng, LatLng> rec =
                         approximateRectangle(polygonLatLngs);
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) =>
-                    //             ResultPage(_locationData, AssetImage())));
+                    test(rec);
                   }
                 },
                 child: Container(
