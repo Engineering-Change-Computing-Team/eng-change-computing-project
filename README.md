@@ -20,23 +20,23 @@ The project is led and supervised by Dr Pedro Baiz.
 
 To run the app, it is recommended to use a phone emulator such as [android studio](https://developer.android.com/studio) which works well with VSCode. </br>
 
-Currently, the server is hosted locally -- to run the application, two terminals must be opened. In the first, navigate to the '/eng-change-computing-project/server/flask_server' directory and run the following commands (depending on your terminal): </br>
+Currently, the server is hosted locally -- to run the application, two terminals must be opened. In the first, navigate to the `/eng-change-computing-project/server/flask_server` directory and run the following commands (depending on your terminal): </br>
 
-**Using Bash**
-' $ export FLASK_APP=flaskr '
-' $ export FLASK_APP=flaskr '
-' $ flask run '
+**Using Bash** </br>
+` $ export FLASK_APP=flaskr ` </br>
+` $ export FLASK_APP=flaskr ` </br>
+` $ flask run ` </br>
 
-**Using CMD**
-' > set FLASK_APP=flaskr '
-' > set FLASK_ENV=development '
-' > flask run '
+**Using CMD** </br>
+` > set FLASK_APP=flaskr ` </br>
+` > set FLASK_ENV=development ` </br>
+` > flask run ` </br>
 
-**Using Powershell**
-' > $env:FLASK_APP = "flaskr" '
-' > $env:FLASK_ENV = "development" '
-' > flask run '
+**Using Powershell** </br>
+` > $env:FLASK_APP = "flaskr" ` </br>
+` > $env:FLASK_ENV = "development" ` </br>
+` > flask run ` </br>
 
-Once the local server is running, go to another terminal and navigate to the '/eng-change-computing-project/workspace' directory and type:
+Once the local server is running, go to another terminal and navigate to the `/eng-change-computing-project/workspace` directory and type: </br>
 
-'flutter run'
+`flutter run` </br>
