@@ -1,24 +1,42 @@
 # eng-change-computing-project
 
+## The project: A Mobile App To Measure Soil Carbon Content
+
+The app allows you to draw an area of land that you want analysed -- a graph is returned detailing how much carbon is contained in your farmland's soil! The app is targetted at farmers who want to leverage 'carbon trading' where they use less than their carbon limit. </br>
+
+The front-end is in the '/eng-change-computing-project/workspace' directory and is made using Flutter, whilst the back-end is in the '/eng-change-computing-project/server' directory and is made using Python. The back-end consists of a server made using Flask. This runs a machine learning model which was trained to estimate carbon content by returning a carbon intensity graph given latitude & longitude coordinates. The front-end has a map which allows you to draw your area to be analysed and a results page which displays the carbon graph. </br>
+
+
 ## Who we are
 
-We are a team of six undergraduate students from Imperial College London who are passionate about using our Engineering skills to combat climate change. </br>
-
-The team is sharing back-end and front-end tasks to ensure everyone gets to learn both sides of development. </br>
+We are a team of six undergraduate students from Imperial College London from the Mechanical Engineering, Aeronautical Engineering, Joint Maths & Computing and Design Engineering departments. </br>
 
 The team met through Imperial's Engineering Change society. More information about the society and their other projects can be found on the [union website](https://www.imperialcollegeunion.org/activities/a-to-z/engineering-change) or [Facebook page](https://www.facebook.com/EngChangeIC/). </br> 
 
 The project is led and supervised by Dr Pedro Baiz.
 
-## The project
 
-The project brief is to develop a mobile application that can measure the carbon content in a plot of land using satellite data. </br>
+## Running the app
 
+To run the app, it is recommended to use a phone emulator such as [android studio](https://developer.android.com/studio) which works well with VSCode. </br>
 
-We will be using **Figma** for UI/ UX development. The app will be built using **Flutter**. </br>
+Currently, the server is hosted locally -- to run the application, two terminals must be opened. In the first, navigate to the '/eng-change-computing-project/server/flask_server' directory and run the following commands (depending on your terminal): </br>
 
-The project will implement an AI program written by a Master's student to calculate the carbon content in a plot of land. Once this is complete, a link to the code will be added [here]().
+**Using Bash**
+' $ export FLASK_APP=flaskr '
+' $ export FLASK_APP=flaskr '
+' $ flask run '
 
-## Goals of summer 2021
+**Using CMD**
+' > set FLASK_APP=flaskr '
+' > set FLASK_ENV=development '
+' > flask run '
 
-Given the short time-frame of the project (summer 2021), we will be developing the Minimum Viable Product. This will be a hybrid app (one for both iOS and Android) that can simply plot the boundary for a plot of land and calculate the carbon content. Future teams from Engineering Change will improve what we have developed by adding more features.
+**Using Powershell**
+' > $env:FLASK_APP = "flaskr" '
+' > $env:FLASK_ENV = "development" '
+' > flask run '
+
+Once the local server is running, go to another terminal and navigate to the '/eng-change-computing-project/workspace' directory and type:
+
+'flutter run'
