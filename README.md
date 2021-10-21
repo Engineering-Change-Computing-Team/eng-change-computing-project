@@ -9,9 +9,7 @@ The front-end is in the '/eng-change-computing-project/workspace' directory and 
 
 ## Who we are
 
-We are a team of six undergraduate students from Imperial College London from the Mechanical Engineering, Aeronautical Engineering, Joint Maths & Computing and Design Engineering departments. </br>
-
-The team met through Imperial's Engineering Change society. More information about the society and their other projects can be found on the [union website](https://www.imperialcollegeunion.org/activities/a-to-z/engineering-change) or [Facebook page](https://www.facebook.com/EngChangeIC/). </br> 
+We are a team of undergraduate students from Imperial College London. The team met through Imperial's Engineering Change society. More information about the society and their other projects can be found on the [union website](https://www.imperialcollegeunion.org/activities/a-to-z/engineering-change) or [Facebook page](https://www.facebook.com/EngChangeIC/). </br> 
 
 The project is led and supervised by Dr Pedro Baiz.
 
