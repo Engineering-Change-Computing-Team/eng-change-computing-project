@@ -4,7 +4,7 @@
 
 The app allows you to draw an area of land that you want analysed -- a graph is returned detailing how much carbon is contained in any area of farmland as well as carbon in . </br>
 
-We use a machine learning model trained to predict the carbon content using satellite image data, allowing for real time measurements without needing to do any soil sampling saving huge amounts of time and money. </br>
+We use a machine learning model trained to predict the carbon content using satellite image data, allowing for real time measurements without needing to do any soil sampling, saving huge amounts of time and money. </br>
 
 <!-- The front-end is in the '/eng-change-computing-project/workspace' directory and is made using Flutter, whilst the back-end is in the '/eng-change-computing-project/server' directory and is made using Python. The back-end consists of a server made using Flask. This runs a machine learning model which was trained to estimate carbon content by returning a carbon intensity graph given latitude & longitude coordinates. The front-end has a map which allows you to draw your area to be analysed and a results page which displays the carbon graph. </br> -->
 
@@ -31,13 +31,13 @@ The project is led and supervised by Dr Pedro Baiz. -->
 
 ## Estimating Soil Carbon -- The Machine Learning
 
+After highlighting an area of land, the 'measure' button is pressed and a carbon map similar to the following is displayed to the user.
 
-
-`The Accuracy of Our Model Is Very Good`
+`The Accuracy Of Our Model Is Very Good`
 
 ![Image 18-01-2022 at 23 43](https://user-images.githubusercontent.com/85403218/150036565-1cb7d01b-8be9-4377-8b0b-faa391da7688.jpeg)
 
-
+The model was evaluated using large amounts of ground truth carbon data which was previously gathered using soil samples. The results above demonstrate the high accuracy of the model in predicting the carbon stored using only satellite images. With some more funding, we would be able to use live commerical satellite data. The satellite data which has been used up to now is open source meaning the resolution is poor, but commerical satellite data can have orders of magnitude higher resolution which would improve the accuracy of the model substantially. Live data would allow users of the app to get real time carbon measurements just by using our app.
 
 <!-- 
 ## Running the app
