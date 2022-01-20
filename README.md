@@ -2,7 +2,7 @@
 
 ## Mobile App to Measure Soil Carbon -- MVP
 
-The app allows you to draw an area of land that you want analysed -- a graph is returned detailing how much carbon is contained in any area of farmland as well as carbon in . </br>
+The app allows you to draw an area of land that you want analysed -- a graph is returned detailing how much carbon is contained in any area of farmland. </br>
 
 We use a machine learning model trained to predict the carbon content using satellite image data, allowing for real time measurements without needing to do any soil sampling, saving huge amounts of time and money. </br>
 
